@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>848c59f5-74a6-4326-abcd-7cb22ac2812f</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>MP2.py</StartupFile>
+    <StartupFile>UI.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,7 +21,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="MP2.py" />
+    <Compile Include="Trainer.py" />
+    <Compile Include="UI.py" />
+    <Compile Include="Perceptron.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
