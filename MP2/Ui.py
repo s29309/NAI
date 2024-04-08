@@ -1,4 +1,10 @@
 
+from hmac import new
+
+from Perceptron import Perceptron
+from Trainer import Trainer
+
+
 class UI:
 
     def get_vector_input(self):
@@ -39,6 +45,12 @@ class UI:
         while test_set == []:
             test_set_path = input("test set path: ")
             test_set=self.read_file(test_set_path)
+
+        perceptron = Perceptron(test_set, 0.5)
+        trainer = Trainer(train_set, perceptron, 5)
+        
+        trainer.train_perceptron()
+        perceptron.compute_all()
 
 
         vector = self.get_vector_input()
