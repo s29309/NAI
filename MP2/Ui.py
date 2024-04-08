@@ -1,11 +1,9 @@
-
-from hmac import new
-
 from Perceptron import Perceptron
 from Trainer import Trainer
 
 
 class UI:
+
 
     def get_vector_input(self):
 
@@ -32,6 +30,15 @@ class UI:
             print(f"nie ma pliku...")
             return []
 
+    def compute_vector(self, vector):
+        result = self.perceptron.compute(vector)
+        if result == 1:
+            print("wektor nalezy do grupy 1")
+        else:
+            print("wektor nalezy do grupy 2")
+
+
+
     def run(self):
         train_set = []
         test_set = []
@@ -46,16 +53,18 @@ class UI:
             test_set_path = input("test set path: ")
             test_set=self.read_file(test_set_path)
 
-        perceptron = Perceptron(test_set, 0.5)
-        trainer = Trainer(train_set, perceptron, 5)
+        self.perceptron = Perceptron(test_set, 0.5)
+        trainer = Trainer(train_set, self.perceptron, 6)
         
         trainer.train_perceptron()
-        perceptron.compute_all()
+        self.perceptron.compute_all()
 
 
         vector = self.get_vector_input()
         while vector!=[0]:
+            self.compute_vector(vector)
             vector = self.get_vector_input()
+            
 
 
 
