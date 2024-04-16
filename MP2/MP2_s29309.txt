@@ -1,0 +1,177 @@
+from Perceptron import Perceptron
+from Trainer import Trainer
+
+
+class UI:
+
+
+    def get_vector_input(self):
+
+        try:
+            vector_str = input("(0 - wyjscie) poprosze vector do klasyfikacji: ")
+            vector = [float(x) for x in vector_str.split(";")]
+            return vector
+        except ValueError:
+            print("nie dziala...")
+            return []
+
+    def read_file(self, file_path):
+        result = []
+        try:
+            with open(file_path, 'r') as file:
+                for line in file:
+                    strings = line.strip().split(';')
+                    values = [float(x) for x in strings[:-1]]
+                    values.append(strings[-1])
+                    result.append(values)
+            #print(result)
+            return result
+        except FileNotFoundError:
+            print(f"nie ma pliku...")
+            return []
+
+    def compute_vector(self, vector):
+        result = self.perceptron.compute(vector)
+        if result == 1:
+            print("wektor nalezy do grupy 1")
+        else:
+            print("wektor nalezy do grupy 2")
+
+
+
+    def run(self):
+        train_set = []
+        test_set = []
+        vector = []
+
+        print("dzien dobry")
+        while train_set == []:
+            train_set_path = input("train set path: ")
+            train_set=self.read_file(train_set_path)
+
+        while test_set == []:
+            test_set_path = input("test set path: ")
+            test_set=self.read_file(test_set_path)
+
+        self.perceptron = Perceptron(test_set, 0.5)
+        trainer = Trainer(train_set, self.perceptron, 6)
+        
+        trainer.train_perceptron()
+        self.perceptron.compute_all()
+
+
+        vector = self.get_vector_input()
+        while vector!=[0]:
+            self.compute_vector(vector)
+            vector = self.get_vector_input()
+            
+
+
+
+
+if __name__ == "__main__":
+    ui = UI()
+    ui.run()
+
+
+class Perceptron:
+    
+    values = [[]]
+    data = [[]]
+    labels = []
+    w = []
+    a = 0
+    first_label = ""
+    wrong_label1 = 0
+    wrong_label2 = 0
+    bias = 0.5
+    
+
+    def __init__(self, data, a):
+        self.data = data
+        self.values = [l[:-1] for l in data]
+        self.labels = [l[-1] for l in data]
+        self.a = a
+        self.w = [1]*(len(self.values[0]))
+        self.first_label = data[0][-1]
+    
+    def compute(self, vector):
+        y = -self.bias
+        for i in range(len(self.w)):
+            y+=self.w[i]*vector[i]
+        if y>=0:
+            return 1
+        return 0
+    
+
+    def compute_all(self):
+        for vector in self.data:
+            y = self.compute(vector[:-1])
+            
+            if vector[-1] == self.first_label:
+                label = 1
+            else:
+                label = 0
+            
+            print(vector)
+            print(self.w)
+            print(y)
+            print(label)
+            print()
+
+            if y != label:
+                print("zle!!")
+                if label == 1:
+                    self.wrong_label1+=1
+                else:
+                    self.wrong_label2+=1
+           
+        wrong=self.wrong_label1+self.wrong_label2
+        total=len(self.data)
+        right=total-wrong
+        right1 = total/2 - self.wrong_label1
+        right2 = total/2 - self.wrong_label2
+
+        print(f"Celnosc: {right/total*100}%")
+        print(f"Celnosc grupy 1: {right1/total*200}%")
+        print(f"Celnosc grupy 2: {right2/total*200}%")
+
+                
+
+
+
+    def learn(self, vector, label):
+        if label == self.first_label:
+            y = 1
+        else:
+            y = 0
+        result = self.compute(vector)
+        error = y-result
+        for i in range(len(self.w)):
+            self.w[i] += self.a*error*vector[i]
+        self.bias -= error*self.a
+
+
+class Trainer:
+    
+    def __init__(self, data, perceptron, n):
+        self.data = data
+        self.perceptron = perceptron
+        self.n = n
+    
+    def train_perceptron(self):
+        for i in range(self.n):
+            for vector in self.data:
+                self.perceptron.learn(vector[:-1], vector[-1])
+            
+            
+        
+
+
+
+
+
+                
+            
+        
+        
